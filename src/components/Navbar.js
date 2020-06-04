@@ -6,7 +6,10 @@ const Navbar = () => {
     <div className="three wide column">
       <div className="ui vertical pointing menu">
         <NavLink to="/jobs" className="item">
-          New Jobs
+          Filter Stream Jobs
+        </NavLink>
+        <NavLink to="/recent" className="item">
+          Recent Search Jobs
         </NavLink>
         <NavLink to="/rules" className="item">
           Manage Rules

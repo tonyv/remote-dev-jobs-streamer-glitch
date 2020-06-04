@@ -32,6 +32,8 @@ const rulesURL = new URL(
   "https://api.twitter.com/labs/1/tweets/stream/filter/rules"
 );
 
+const searchURL = new URL("https://api.twitter.com/labs/2/tweets/search");
+
 const errorMessage = {
   title: "Please Wait",
   detail: "Waiting for new jobs to be posted...",
@@ -100,6 +102,47 @@ app.post("/api/rules", async (req, res) => {
     }
   } catch (e) {
     res.send(e);
+  }
+});
+
+app.get("/api/jobs", async (req, res) => {
+  const token = await bearerToken({ CONSUMER_KEY, CONSUMER_SECRET });
+  const query =
+    "(developer OR engineer) remote (context:66.961961812492148736 OR context:66.850073441055133696)";
+  const maxResults = 100;
+  const tweetFields = "entities,context_annotations";
+  const expansions = "author_id";
+
+  const requestConfig = {
+    url: searchURL,
+    qs: {
+      query: query,
+      max_results: maxResults,
+      expansions: "author_id",
+      "user.fields": "username",
+      "tweet.fields": tweetFields,
+    },
+    auth: {
+      bearer: token,
+    },
+    headers: {
+      "User-Agent": "Remote Dev Jobs Streamer",
+    },
+    json: true,
+  };
+
+  try {
+    const response = await get(requestConfig);
+
+    if (response.statusCode !== 200) {
+      throw new Error(response.json);
+      return;
+    }
+
+    res.send(response);
+  } catch (e) {
+    console.error(`Could not get search results. An error occurred: ${e}`);
+    process.exit(-1);
   }
 });
 

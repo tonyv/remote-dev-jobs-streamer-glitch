@@ -3,12 +3,12 @@ import Moment from "react-moment";
 import "../stylesheets/Job.css";
 
 const Job = ({ json }) => {
-  const { created_at, id } = json.data;
+  const { created_at, id } = json;
   const { name = "", username = "" } = json.includes.users[0];
 
   const hashtags = () => {
     if (json.data.entities && json.data.entities.hashtags) {
-      return json.data.entities.hashtags.map(hashtag => (
+      return json.data.entities.hashtags.map((hashtag) => (
         <span key={hashtag.tag} className="ui label">
           #{hashtag.tag}
         </span>
@@ -33,7 +33,7 @@ const Job = ({ json }) => {
 
   const annotations = () => {
     if (json.data.context_annotations) {
-      return json.data.context_annotations.map(context => (
+      return json.data.context_annotations.map((context) => (
         <span key={context.entity.id} className="ui small teal basic label">
           {context.entity.name}
         </span>
